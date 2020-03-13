@@ -2,7 +2,6 @@
 
 namespace Calchen\LaravelAliyunSms;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
 /**
@@ -18,8 +17,6 @@ use Illuminate\Support\Str;
  */
 class SmsUser
 {
-    use Notifiable;
-
     const CHINESE_MAINLAND_COUNTRY_CALLING_CODE = '86';
 
     /**
