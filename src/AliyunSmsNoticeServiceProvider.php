@@ -15,15 +15,8 @@ class AliyunSmsNoticeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadTranslationsFrom(__DIR__.'/../lang', 'aliyun_sms');
-
-        if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/../lang' => resource_path('lang/vendor/aliyun_sms'),
-            ]);
-        }
-
         $this->setupConfig();
+        $this->setupLang();
     }
 
     /**
@@ -44,6 +37,20 @@ class AliyunSmsNoticeServiceProvider extends ServiceProvider
         }
 
         $this->mergeConfigFrom($source, 'aliyun_sms');
+    }
+
+    /**
+     * 处理翻译文件
+     */
+    protected function setupLang()
+    {
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'aliyun_sms');
+
+        if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../lang' => resource_path('lang/'),
+            ]);
+        }
     }
 
     /**
