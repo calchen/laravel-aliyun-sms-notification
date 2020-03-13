@@ -45,7 +45,7 @@
         "laravel": {
             "providers": [
                 "Calchen\\LaravelAliyunSms\\AliyunSmsNoticeServiceProvider"
-            ],
+            ]
         }
     }
 }
