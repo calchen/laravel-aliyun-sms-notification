@@ -17,6 +17,12 @@ class AliyunSmsNoticeServiceProvider extends ServiceProvider
     {
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'aliyun_sms');
 
+        if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../lang' => resource_path('lang/vendor/aliyun_sms'),
+            ]);
+        }
+
         $this->setupConfig();
     }
 
