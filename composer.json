@@ -46,9 +46,6 @@
             "providers": [
                 "Calchen\\LaravelAliyunSms\\AliyunSmsNoticeServiceProvider"
             ],
-            "aliases": {
-                "DingtalkRobot": "Calchen\\LaravelAliyunSms\\Facade"
-            }
         }
     }
 }
