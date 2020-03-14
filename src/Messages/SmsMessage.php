@@ -6,6 +6,8 @@ use Calchen\LaravelAliyunSms\SmsUser;
 
 class SmsMessage extends Message
 {
+    const ACTION = 'SendSms';
+
     /**
      * SmsMessage constructor.
      *

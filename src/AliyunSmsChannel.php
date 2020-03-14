@@ -33,16 +33,22 @@ class AliyunSmsChannel
         }
 
         try {
-            AlibabaCloud::accessKeyClient(config('aliyun_sms.access_key_id'), config('aliyun_sms.access_key_secret'))
-                ->regionId(config('aliyun_sms.aliyun.region'))
-                ->name(config('aliyun_sms.access_key_client_name'));
+            $accessKeyId = config('aliyun_sms.access_key_id');
+            $accessKeySecret = config('aliyun_sms.access_key_secret');
+            $region = config('aliyun_sms.region');
+            $clientName = config('aliyun_sms.access_key_client_name');
+
+            AlibabaCloud::accessKeyClient($accessKeyId, $accessKeySecret)->regionId($region)->name($clientName);
 
             $options = $message->getMessage();
-            $options['RegionId'] = config('aliyun_sms.region');
+            $options['RegionId'] = $region;
+
+            $action = constant(get_class($message)."::ACTION");
 
             (new Rpc)
+                ->client($clientName)
                 ->scheme('https')
-                ->action('SendSms')
+                ->action($action)
                 ->host('dysmsapi.aliyuncs.com')
                 ->options([
                     'query' => $options,

@@ -8,6 +8,8 @@ use Illuminate\Support\Collection;
 
 class SmsBatchMessage extends Message
 {
+    const ACTION = 'SendBatchSms';
+
     /**
      * SmsMessage constructor.
      *
