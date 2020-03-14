@@ -63,11 +63,11 @@ class AliyunSmsChannel
             // 文档 https://help.aliyun.com/document_detail/101346.html?spm=a2c4g.11186623.6.621.cbd42246K5pp8V
             if ($result['Code'] != 'OK') {
                 throw new Exception(
-                    __('aliyun_sms::errors.aliyun_sdk_client_exception', [
+                    __('aliyun_sms::errors.aliyun_api_failed', [
                         'code'    => $result['Code'],
                         'message' => $result['Message'],
                     ]),
-                    ErrorCodes::ALIYUN_SDK_API_FAILED
+                    ErrorCodes::ALIYUN_API_FAILED
                 );
             }
         } catch (ClientException $e) {
