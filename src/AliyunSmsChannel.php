@@ -7,9 +7,9 @@ use AlibabaCloud\Client\Exception\ClientException;
 use AlibabaCloud\Client\Exception\ServerException;
 use AlibabaCloud\Dysmsapi\V20170525\Rpc;
 use Calchen\LaravelAliyunSms\Exceptions\ErrorCodes;
+use Calchen\LaravelAliyunSms\Exceptions\Exception;
 use Calchen\LaravelAliyunSms\Exceptions\InvalidArgumentException;
 use Calchen\LaravelAliyunSms\Messages\Message;
-use Exception;
 use Illuminate\Notifications\Notification;
 use ReflectionException;
 
@@ -29,7 +29,10 @@ class AliyunSmsChannel
         /** @var Message $message */
         $message = $notification->toAliyunSms($notifiable);
         if (! $message instanceof Message) {
-            throw new InvalidArgumentException(ErrorCodes::MESSAGE_TYPE_ERROR, __('aliyun_sms.message_type_error'));
+            throw new InvalidArgumentException(
+                __('aliyun_sms::errors.message_type_error'),
+                ErrorCodes::MESSAGE_TYPE_ERROR
+            );
         }
 
         try {
@@ -45,7 +48,7 @@ class AliyunSmsChannel
 
             $action = constant(get_class($message)."::ACTION");
 
-            (new Rpc)
+            $response = (new Rpc)
                 ->client($clientName)
                 ->scheme('https')
                 ->action($action)
@@ -54,22 +57,35 @@ class AliyunSmsChannel
                     'query' => $options,
                 ])
                 ->request();
+
+            $result = $response->toArray();
+            // Code 为 Ok 时表示发送成功
+            // 文档 https://help.aliyun.com/document_detail/101346.html?spm=a2c4g.11186623.6.621.cbd42246K5pp8V
+            if ($result['Code'] != 'OK') {
+                throw new Exception(
+                    __('aliyun_sms::errors.aliyun_sdk_client_exception', [
+                        'code'    => $result['Code'],
+                        'message' => $result['Message'],
+                    ]),
+                    ErrorCodes::ALIYUN_SDK_API_FAILED
+                );
+            }
         } catch (ClientException $e) {
             throw new Exception(
-                ErrorCodes::ALIYUN_SDK_CLIENT_EXCEPTION,
-                __('aliyun_sms.aliyun_sdk_client_exception', [
+                __('aliyun_sms::errors.aliyun_sdk_client_exception', [
                     'code'    => $e->getErrorCode(),
                     'message' => $e->getErrorMessage(),
                 ]),
+                ErrorCodes::ALIYUN_SDK_CLIENT_EXCEPTION,
                 $e->getPrevious()
             );
         } catch (ServerException $e) {
             throw new Exception(
-                ErrorCodes::ALIYUN_SDK_SERVER_EXCEPTION,
-                __('aliyun_sms.aliyun_sdk_server_exception', [
+                __('aliyun_sms::errors.aliyun_sdk_server_exception', [
                     'code'    => $e->getErrorCode(),
                     'message' => $e->getErrorMessage(),
                 ]),
+                ErrorCodes::ALIYUN_SDK_SERVER_EXCEPTION,
                 $e->getPrevious()
             );
         }

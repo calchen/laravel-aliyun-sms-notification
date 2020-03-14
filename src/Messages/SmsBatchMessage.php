@@ -2,8 +2,9 @@
 
 namespace Calchen\LaravelAliyunSms\Messages;
 
+use Calchen\LaravelAliyunSms\Exceptions\ErrorCodes;
+use Calchen\LaravelAliyunSms\Exceptions\Exception;
 use Calchen\LaravelAliyunSms\SmsUser;
-use Exception;
 use Illuminate\Support\Collection;
 
 class SmsBatchMessage extends Message
@@ -39,8 +40,10 @@ class SmsBatchMessage extends Message
         }
 
         if (! $smsUsers instanceof Collection) {
-            // todo
-            throw new Exception();
+            throw new Exception(
+                __('aliyun_sms::errors.argument_sms_users_type_invalid'),
+                ErrorCodes::ARGUMENT_SMS_USERS_TYPE_INVALID
+            );
         }
 
         $this->message = [
