@@ -24,8 +24,8 @@
         "php": "^7.0",
         "ext-json": "*",
         "alibabacloud/sdk": "^1.8",
-        "illuminate/notifications": "^5.5|^6.0|^7.0",
-        "illuminate/support": "^5.5|^6.0|^7.0"
+        "illuminate/notifications": "^5.5|^6.0|^7.0|^8.0",
+        "illuminate/support": "^5.5|^6.0|^7.0|^8.0"
     },
     "require-dev": {
         "php-coveralls/php-coveralls": "^2.1",
